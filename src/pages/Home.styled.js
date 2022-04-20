@@ -17,3 +17,10 @@ export const SearchInput = styled.input`
     color: black;
   }
 `;
+
+export const RadioWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+`;

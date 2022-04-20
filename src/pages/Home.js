@@ -3,18 +3,20 @@ import Cards from "../components/Cards";
 import Nav from "../components/Nav";
 import Title from "../components/Title";
 import { apiGet } from "../misc/config";
-import { SearchInput } from "./Home.styled";
+import { SearchInput, RadioWrapper } from "./Home.styled";
 
 const Home = () => {
   let [input, setInput] = useState("");
   let [result, setResult] = useState(null);
+  let [serachOption, setSerachOption] = useState("shows");
 
+  let isShowOption = serachOption === 'shows';
   const onInputChange = (ev) => {
     setInput(ev.target.value);
   };
 
   let getShows = () => {
-    apiGet(`/search/shows?q=${input}`).then((result) => {
+    apiGet(`/search/${serachOption}?q=${input}`).then((result) => {
       setResult(result);
     });
   };
@@ -25,15 +27,20 @@ const Home = () => {
     }
   };
 
+  let onRadioChange = (ev) => {
+    setSerachOption(ev.target.value)
+    console.log(serachOption)
+  }
+
   let renderResult = (result) => {
     if (result && result.length === 0) {
       return <div>No result</div>;
     }
     if (result && result.length > 0) {
-      return result.map((item) => {
+      return result[0].show ? (result.map((item) => {
         console.log(item.show);
         return <Cards key={item.show.id} data={item.show} />;
-      });
+      })) : ("actor");
     }
   };
 
@@ -48,6 +55,11 @@ const Home = () => {
         onKeyDown={onKeyDown}
         value={input}
       />
+
+      <RadioWrapper>
+        <input type="radio" value="shows" id="show-search" checked={isShowOption} onChange={onRadioChange} />
+        <input type="radio" value="people" id="actor-search" checked={!isShowOption} onChange={onRadioChange} />
+      </RadioWrapper>
 
       <div className="container">
         <div className="row">{renderResult(result)}</div>
